@@ -10,7 +10,7 @@ The goal is to build, simulate, and control a robotic manipulator (Armando) with
 
 Clone this package in the src folder of the ROS 2 workspace. Check for missing dependencies:
 ```bash 
-$ sudo apt-install joint-state-publisher
+$ sudo apt-install ros-humble-joint-state-publisher
 ```
 
 Build the new packages:
