@@ -13,15 +13,12 @@ class ArmControllerNode : public rclcpp::Node
 public:
   ArmControllerNode() : Node("arm_controller_node")
   {
-    // Legge il parametro per scegliere il tipo di controller
     controller_type_ = this->declare_parameter<std::string>("controller_type", "position");
 
-    // Subscriber per leggere lo stato dei giunti
     joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
       "/joint_states", 10,
       std::bind(&ArmControllerNode::jointStateCallback, this, std::placeholders::_1));
 
-    // Seleziona il controller corretto
     if (controller_type_ == "trajectory")
     {
       trajectory_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
@@ -37,7 +34,6 @@ public:
       RCLCPP_INFO(this->get_logger(), "Using the Position Controller.");
     }
 
-    // Timer per inviare i comandi periodicamente
     timer_ = this->create_wall_timer(500ms, std::bind(&ArmControllerNode::publishCommand, this));
 
     RCLCPP_INFO(this->get_logger(), "Arm controller node started!");
@@ -65,12 +61,10 @@ private:
   {
     if (step_ < commands_.size())
     {
-      // Se siamo all'inizio o abbiamo raggiunto la posizione precedente
       if (step_ == 0 || isAtTarget(commands_[step_ - 1]))
       {
         if (use_trajectory_controller_)
         {
-          // Crea e invia un messaggio di traiettoria
           trajectory_msgs::msg::JointTrajectory traj;
           traj.joint_names = {"j0", "j1", "j2", "j3"};
 
@@ -85,7 +79,6 @@ private:
         }
         else
         {
-          // Crea e invia un comando diretto di posizione
           std_msgs::msg::Float64MultiArray msg;
           msg.data = commands_[step_];
           position_pub_->publish(msg);
@@ -106,7 +99,6 @@ private:
     }
     else
     {
-      // Tutte le posizioni raggiunte
       if (isAtTarget(commands_.back()))
       {
         RCLCPP_INFO(this->get_logger(), "All positions reached!");
@@ -115,13 +107,11 @@ private:
     }
   }
 
-  // --- ROS ---
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr position_pub_;
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr trajectory_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
 
-  // --- Variabili ---
   std::vector<double> current_positions_;
   std::vector<std::vector<double>> commands_ = {
       {0.9,  1.3, -1.1, -1.0},
@@ -136,7 +126,7 @@ private:
   size_t step_ = 0;
 };
 
-// --- main ---
+
 int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
