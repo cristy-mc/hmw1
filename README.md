@@ -1,12 +1,12 @@
-🦾 HMW1 – Armando Robot
+# 🦾 HMW1 – Armando Robot
 
-🧩 Overview
+## 🧩 Overview
 
 This project implements Homework 1 of the Robotics Lab 2025 course.
 The goal is to build, simulate, and control a robotic manipulator (Armando) within the ROS 2 + Gazebo environment.
 
 
-🔨 Build
+## 🔨 Build
 
 Clone this package in the src folder of the ROS 2 workspace. Check for missing dependencies:
 ```bash 
@@ -19,7 +19,7 @@ $ colcon build --packages-select armando_description armando_gazebo armando_cont
 ```
 
 
-🚀 Launch Instructions
+## 🚀 Launch Instructions
 
 Visualize the robot in RViz
 ```bash
@@ -31,7 +31,7 @@ Spawn the robot in Gazebo
 ros2 launch armando_gazebo armando_world.launch.py
 ```
 
-🎮 How to Control the Robot
+## 🎮 How to Control the Robot
 
 Launch the nodes for position controller:
 ```bash
